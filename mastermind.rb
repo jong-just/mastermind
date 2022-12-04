@@ -25,6 +25,12 @@ module Toolbox
     end
   end
 
+  # sends each code to be converted from number to color
+  def convert_to_color!(code_in_numbers)
+    code_in_numbers.each_with_index do |n, i|
+      code_in_numbers[i] = converter(n)
+    end
+  end
 end
 
 class Mastermind
@@ -44,13 +50,6 @@ class Mastermind
   end
 
   private
-
-  # sends each code to be converted from number to color
-  def convert_to_color!(code_in_numbers)
-    code_in_numbers.each_with_index do |n, i|
-      @@code[i] = converter(n)
-    end
-  end
 
   # just scrambles the board
   def scramble_board
