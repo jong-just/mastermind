@@ -38,6 +38,11 @@ class Mastermind
 
   @@board = [0,1,2,3,4,5,6,7]
   @@code = Array.new
+  @@guesses = {
+    big_correct: 0,
+    small_correct: 0,
+    no_correct: 0
+  }
 
   def initialize(size)
     @size = size
@@ -57,6 +62,46 @@ class Mastermind
   end
 end
 
+class Player
+  include Toolbox
+  attr_accessor :code_guess
+
+  def initialize(code_guess)
+    @code_guess = code_guess
+  end
+
+  def output_guess
+    p guess_converter
+  end
+
+  private
+
+  # sends the integer guess array to be converted to color
+  def guess_converter
+    convert_to_color!(convert_player_guess)
+  end
+
+  # returns the result from: player guess to array => string in array to integer
+  def convert_player_guess
+    string_to_i!(player_guess_to_array)
+  end
+
+  # splits the player guess string to arrays
+  def player_guess_to_array
+    @code_guess.split(" ")
+  end
+
+  # does the changing of changing string to integer
+  def string_to_i!(code_array)
+    code_array.each_with_index do |n, i|
+      code_array[i] = n.to_i
+    end
+  end
+
+end
+
 game = Mastermind.new(4)
+player = Player.new(gets.chomp)
+player.output_guess
 
 p game.game_set
