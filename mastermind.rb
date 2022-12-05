@@ -52,8 +52,19 @@ class Mastermind
   @@end = false
   @@guess_count = 0
 
-  def initialize(size)
+  def initialize(size, mode)
     @size = size
+    @mode = mode
+  end
+
+  def who_guesses
+    case @mode
+    when "player"
+      puts "Player mode selected.\nThese are the color options: #{BOARD.join(", ")}."
+      player_play
+    when "computer play"
+      # computer play
+    end
   end
 
   def player_guess
@@ -65,7 +76,8 @@ class Mastermind
     end
   end
 
-  def play
+  # method for when the player is the one making guess
+  def player_play
     game_set
     until @@end do
       @@guess_count+=1
@@ -135,7 +147,7 @@ class Mastermind
     BOARD.shuffle
   end
 end
+print "Choose game mode (player, computer): "
+game = Mastermind.new(4, gets.chomp)
 
-game = Mastermind.new(4)
-
-game.play
+game.who_guesses
