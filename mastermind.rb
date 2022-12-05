@@ -72,7 +72,7 @@ end
 class Mastermind
   include Toolbox
   @@player = Player.new
-  @@board = ["0,1,2,3,4,5,6,7"]
+  @@board = [0,1,2,3,4,5,6,7]
   @@code = []
   @@guesses = {
     big_correct: 0,
