@@ -1,3 +1,4 @@
+# module to hold constants and methods used throughout the game
 module Toolbox
   BOARD = ["red", "green", "blue", "yellow", "brown", "orange", "black", "white"]
   EXIT = ["quit", "exit", "x"]
@@ -8,13 +9,14 @@ module Toolbox
   end
 end
 
+# class for player, holds methods for palyer input
 class Player
   include Toolbox
   attr_accessor :code_guess
+
   @@guess_array = []
 
-  def initialize()
-  end
+  def initialize(); end
 
   def output_guess
     player_guess_to_array
@@ -38,11 +40,11 @@ class Player
   def player_guess_to_array
     @@guess_array = @code_guess.split(" ")
   end
-
 end
 
 class Jarvis < Player; end
 
+# class for the mastermind game. holds most game mechanic methods
 class Mastermind
   include Toolbox
   @@player = Player.new
@@ -76,6 +78,8 @@ class Mastermind
       puts "I don't know who that is, goodbye."
     end
   end
+
+  private
 
   def player_guess
     while true do
@@ -144,8 +148,6 @@ class Mastermind
   def game_set
     @@code = scramble_board.slice(0, @size)
   end
-
-  private
 
   # method for calculating the hints
   def calculate_hint(guess, code)
