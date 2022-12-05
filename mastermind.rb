@@ -33,41 +33,11 @@ module Toolbox
   end
 end
 
-class Mastermind
-  include Toolbox
-
-  @@board = [0,1,2,3,4,5,6,7]
-  @@code = Array.new
-  @@guesses = {
-    big_correct: 0,
-    small_correct: 0,
-    no_correct: 0
-  }
-
-  def initialize(size)
-    @size = size
-  end
-
-  # sets the game; scramble the board to set the code and cut it to size.
-  def game_set
-    @@code = scramble_board.slice(0, @size)
-    convert_to_color!(@@code)
-  end
-
-  private
-
-  # just scrambles the board
-  def scramble_board
-    @@board.shuffle
-  end
-end
-
 class Player
   include Toolbox
   attr_accessor :code_guess
 
-  def initialize(code_guess)
-    @code_guess = code_guess
+  def initialize()
   end
 
   def output_guess
@@ -97,11 +67,59 @@ class Player
       code_array[i] = n.to_i
     end
   end
-
 end
 
-game = Mastermind.new(4)
-player = Player.new(gets.chomp)
-player.output_guess
+class Mastermind
+  include Toolbox
+  @@player = Player.new
+  @@board = [0,1,2,3,4,5,6,7]
+  @@code = []
+  @@guesses = {
+    big_correct: 0,
+    small_correct: 0,
+    no_correct: 0
+  }
+  @@win = false
 
-p game.game_set
+  def initialize(size)
+    @size = size
+  end
+
+  def player_guess
+    @@player.code_guess = gets.chomp
+  end
+
+  def play
+    game_set
+    until @@win do
+      player_guess
+      play = @@player.output_guess
+      puts "Player guess: #{play} | Computer code: #{@@code}"
+
+      # win condition
+      if play.eql?(@@code) 
+        puts "You win! The code was #{@@code}."
+        @@win = true
+      end
+    end
+  end
+
+  # sets the game; scramble the board to set the code and cut it to size.
+  def game_set
+    @@code = scramble_board.slice(0, @size)
+    convert_to_color!(@@code)
+  end
+
+  private
+
+  # just scrambles the board
+  def scramble_board
+    @@board.shuffle
+  end
+end
+
+
+
+game = Mastermind.new(4)
+
+game.play
