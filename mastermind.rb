@@ -1,6 +1,11 @@
 module Toolbox
   BOARD = ["red", "green", "blue", "yellow", "brown", "orange", "black", "white"]
   EXIT = ["quit", "exit", "x"]
+
+  # just scrambles the board
+  def scramble_board
+    BOARD.shuffle
+  end
 end
 
 class Player
@@ -36,6 +41,8 @@ class Player
 
 end
 
+class Jarvis < Player; end
+
 class Mastermind
   include Toolbox
   @@player = Player.new
@@ -62,8 +69,11 @@ class Mastermind
     when "player"
       puts "Player mode selected.\nThese are the color options: #{BOARD.join(", ")}."
       player_play
-    when "computer play"
-      # computer play
+    when "computer"
+      print "Computer Guess mode activated. These are the color options: #{BOARD.join(", ")}.\nPlease enter your code: "
+      computer_play
+    else
+      puts "I don't know who that is, goodbye."
     end
   end
 
@@ -76,12 +86,33 @@ class Mastermind
     end
   end
 
+  # method for when the computer is playing
+  def computer_play
+    @@code = player_guess.split(" ")
+    @computerPlayer = Jarvis.new
+    until @@end do
+      @@guess_count+=1
+      @computerPlayer.code_guess = scramble_board.slice(0, @size)
+      calculate_hint(@@code, @computerPlayer.code_guess)
+      if @@code.eql?(@computerPlayer.code_guess)
+        puts "Computer wins."
+        @@end = true
+      elsif @@guess_count == 8
+        puts "Computer could not guess the code, you win."
+        break
+      end
+      puts "Computer's guess #{@computerPlayer.code_guess.join(", ")}"
+      output_hints
+      guess_count_reset
+    end
+  end
+
   # method for when the player is the one making guess
   def player_play
     game_set
     until @@end do
       @@guess_count+=1
-      print "Try #{@@guess_count}: "
+      print "Turn #{@@guess_count}: "
       player_guess
       play = @@player.output_guess
       puts "Player guess: #{play.join(", ")}" # | Computer code: #{@@code.join(", ")}"
@@ -92,26 +123,14 @@ class Mastermind
         @@end = true
       # exit/quit condition
       elsif EXIT.include?(play[0])
+        puts "Goodbye."
         break
       # didn't win, so calculating hints
       elsif play.eql?(@@code) == false
-        play.each_with_index do |x,idx|
-          if @@code.include?(x)
-            if x == @@code[idx]
-              @@guesses[:big_correct]+=1
-            else
-              @@guesses[:small_correct]+=1
-            end
-          else
-            @@guesses[:no_correct]+=1
-          end
-        end
-
+        calculate_hint(play, @@code)
         output_hints
         guess_count_reset
       end
-
-
 
       # lose condition
       if @@guess_count == 8
@@ -128,9 +147,24 @@ class Mastermind
 
   private
 
+  # method for calculating the hints
+  def calculate_hint(guess, code)
+    guess.each_with_index do |x,idx|
+      if code.include?(x)
+        if x == code[idx]
+          @@guesses[:big_correct]+=1
+        else
+          @@guesses[:small_correct]+=1
+        end
+      else
+        @@guesses[:no_correct]+=1
+      end
+    end
+  end
+
   # outputting the hints
   def output_hints
-    puts "Big Correct: #{@@guesses[:big_correct]} | Small Correct: #{@@guesses[:small_correct]} | No Correct: #{@@guesses[:no_correct]}"
+    puts "Big Correct: #{@@guesses[:big_correct]} | Small Correct: #{@@guesses[:small_correct]} | No Correct: #{@@guesses[:no_correct]}\n \n"
   end
 
   # resets the hint counter for next guess
@@ -141,12 +175,8 @@ class Mastermind
       no_correct: 0
     }
   end
-
-  # just scrambles the board
-  def scramble_board
-    BOARD.shuffle
-  end
 end
+
 print "Choose game mode (player, computer): "
 game = Mastermind.new(4, gets.chomp)
 
