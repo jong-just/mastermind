@@ -72,7 +72,7 @@ class Mastermind
       print "Try #{@@guess_count}: "
       player_guess
       play = @@player.output_guess
-      puts "Player guess: #{play.join(", ")} | Computer code: #{@@code.join(", ")}"
+      puts "Player guess: #{play.join(", ")}" # | Computer code: #{@@code.join(", ")}"
 
       # win condition
       if play.eql?(@@code)
