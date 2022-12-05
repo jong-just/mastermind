@@ -80,6 +80,7 @@ class Mastermind
     no_correct: 0
   }
   @@win = false
+  @@guess_count = 0
 
   def initialize(size)
     @size = size
@@ -95,11 +96,15 @@ class Mastermind
       player_guess
       play = @@player.output_guess
       puts "Player guess: #{play} | Computer code: #{@@code}"
+      @@guess_count+=1
+      puts "Try: #{@@guess_count}."
 
       # win condition
       if play.eql?(@@code) 
         puts "You win! The code was #{@@code}."
         @@win = true
+      elsif @@guess_count == 8
+        puts "You lose! The code was #{@@code}."
       end
     end
   end
