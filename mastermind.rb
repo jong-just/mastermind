@@ -45,14 +45,14 @@ class Mastermind
       print "Try #{@@guess_count}: "
       player_guess
       play = @@player.output_guess
-      puts "Player guess: #{play} | Computer code: #{@@code}"
+      puts "Player guess: #{play.join(", ")} | Computer code: #{@@code.join(", ")}"
 
       # win condition
       if play.eql?(@@code) 
-        puts "You win! The code was #{@@code}."
+        puts "You win! The code was: #{@@code.join(", ")}."
         @@win = true
       elsif @@guess_count == 8
-        puts "You lose! The code was #{@@code}."
+        puts "You lose! The code was: #{@@code.join(", ")}."
       end
     end
   end
