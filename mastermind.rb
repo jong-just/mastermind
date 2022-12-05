@@ -93,11 +93,11 @@ class Mastermind
   def play
     game_set
     until @@win do
+      @@guess_count+=1
+      print "Try #{@@guess_count}: "
       player_guess
       play = @@player.output_guess
       puts "Player guess: #{play} | Computer code: #{@@code}"
-      @@guess_count+=1
-      puts "Try: #{@@guess_count}."
 
       # win condition
       if play.eql?(@@code) 
@@ -122,8 +122,6 @@ class Mastermind
     @@board.shuffle
   end
 end
-
-
 
 game = Mastermind.new(4)
 
